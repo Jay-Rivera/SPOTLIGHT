@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jay's API Final</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script
+      src="https://kit.fontawesome.com/00acdc3060.js"
+      crossorigin="anonymous"
+    ></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body>
+    <section id="landing">
+      <div>
+        <div class="nav">
+          <div class="logo">SpotLight</div>
+          <div class="nav__links">
+            <a href="" class="nav__link">Home</a>
+            <a href="" class="nav__link">Search</a>
+            <a href="" class="nav__link contact__link">Contact</a>
+          </div>
+        </div>
+        <div class="input__wrapper">
+          <div class="header">
+            <h1 class="header__title">Search For a Movie</h1>
+          </div>
+          <div id="search" class="search__bar">
+            <input
+              class="search__value"
+              id="search__value"
+              type="text"
+              placeholder="Type in a movie!"
+            />
+            <div class="search__bar--icon">
+              <i
+                onclick="getMovieData()"
+                class="fa-solid fa-magnifying-glass"
+              ></i>
+            </div>
+          </div>
+          <div class="overlay"></div>
+        </div>
+      </div>
+    </section>
+    <section class="search__section">
+      <div class="search__results--header">
+        <div class="search__results--info">
+          <h1 class="sub__header">Search Results:</h1>
+        </div>
+      </div>
+      <div class="search__results--items"></div>
+    </section>
+    <button id="next__page" style="display: none">Next Page</button>
+    <script src="./script.js"></script>
+  </body>
+</html>
