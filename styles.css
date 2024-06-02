@@ -75,29 +75,35 @@ nav {
 }
 
 .overlay {
-  background: url("./assets/jeremy-yap-J39X2xX_8CQ-unsplash.jpg");
-  background-repeat: no-repeat;
-  background-position: 90%;
-  background-size: cover;
-  background-attachment: fixed;
+  position: relative;
   width: 100%;
   height: 100%;
+  z-index: -1;
+}
+
+.overlay::before {
+  content: "";
   position: fixed;
   top: 0;
   left: 0;
-  z-index: -1;
+  width: 100%;
+  height: 100%;
+  background: url("./assets/jeremy-yap-J39X2xX_8CQ-unsplash.jpg") no-repeat
+    center center;
+  background-size: cover;
+  z-index: -2;
 }
 
 .overlay::after {
   content: "";
-  position: fixed; /* This ensures the overlay effect stays in place when scrolling */
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   background: black;
   opacity: 0.6;
-  z-index: -1; /* Ensure this stays behind content */
+  z-index: -1;
 }
 
 .contact__link {
