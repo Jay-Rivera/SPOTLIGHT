@@ -5,7 +5,10 @@ let currentPage = 1;
 let currentSearchTerm = "";
 
 async function getMovieData(page = 1) {
-  const value = document.getElementById("search__value").value;
+  const value = document
+    .getElementById("search__value")
+    .value.trim()
+    .replace(/\s+/g, " ");
   if (value !== currentSearchTerm) {
     currentSearchTerm = value;
     currentPage = 1;
