@@ -3,27 +3,42 @@ const movieListEl = document.querySelector(".search__results--items");
 const nextPageBtn = document.getElementById("next__page");
 let currentPage = 1;
 let currentSearchTerm = "";
+let debounceTimeout;
+
+async function fetchMovieData(url) {
+  try {
+    const response = await fetch(url);
+    return response.json();
+  } catch (error) {
+    console.error("Error fetching movie data:", error);
+    throw error;
+  }
+}
 
 async function getMovieData(page = 1) {
-  const value = document.getElementById("search__value").value;
+  const value = document.getElementById("search__value").value.trim();
   if (value !== currentSearchTerm) {
     currentSearchTerm = value;
     currentPage = 1;
   }
 
+  if (!currentSearchTerm) {
+    movieListEl.innerHTML = `<p class="error__message">Please enter a search term.</p>`;
+    nextPageBtn.style.display = "none";
+    return;
+  }
+
   try {
-    const response = await fetch(
+    const moviesData = await fetchMovieData(
       `http://www.omdbapi.com/?apikey=${apiKey}&s=${currentSearchTerm}&page=${page}`
     );
-    const moviesData = await response.json();
 
     if (moviesData.Response === "True") {
       const movieHTML = await Promise.all(
         moviesData.Search.map(async (movie) => {
-          const movieDetailResponse = await fetch(
+          const movieDetail = await fetchMovieData(
             `http://www.omdbapi.com/?apikey=${apiKey}&i=${movie.imdbID}`
           );
-          const movieDetail = await movieDetailResponse.json();
 
           return `
           <div class="search__results--item">
@@ -39,11 +54,11 @@ async function getMovieData(page = 1) {
                 alt="${movie.Title} Poster"
               />
             </figure>
-            <h2 class="ticket__para--year">Year : ${movie.Year}</h2>
+            <h2 class="ticket__para--year">Year: ${movie.Year}</h2>
             <h3 class="ticket__para">${movieDetail.Plot}</h3>
             <h3 class="ticket__para--actors">Actors: ${movieDetail.Actors}</h3>
           </div>
-        `;
+          `;
         })
       );
 
@@ -59,7 +74,6 @@ async function getMovieData(page = 1) {
       nextPageBtn.style.display = "none";
     }
   } catch (error) {
-    console.error("Error fetching movie data:", error);
     movieListEl.innerHTML = `<p class="error__message">There was an error fetching the movie data. Please try again later.</p>`;
     nextPageBtn.style.display = "none";
   }
@@ -68,13 +82,21 @@ async function getMovieData(page = 1) {
 nextPageBtn.addEventListener("click", () => {
   currentPage += 1;
   getMovieData(currentPage);
-  $(document).scrollTop(0);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+document.getElementById("search__value").addEventListener("input", () => {
+  clearTimeout(debounceTimeout);
+  debounceTimeout = setTimeout(() => {
+    getMovieData();
+  }, 300);
 });
 
 document
   .getElementById("search__value")
   .addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
+      clearTimeout(debounceTimeout);
       getMovieData();
     }
   });
